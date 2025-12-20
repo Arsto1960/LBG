@@ -202,7 +202,71 @@ if len(st.session_state['history']) > 0:
     st.markdown("**Distortion Curve**")
     st.line_chart(st.session_state['history'], height=150)
 
-# --- Visualization ---
+# # --- Visualization ---
+# with col_main:
+#     fig, ax = plt.subplots(figsize=(10, 7))
+    
+#     # Define bounds for the background map
+#     x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
+#     y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
+    
+#     # --- 1. Background Coloring (Decision Boundaries) ---
+#     # We use 'region_codebook' which lags behind the actual 'codebook' during the split phase
+#     region_cb = st.session_state['region_codebook']
+    
+#     if len(region_cb) >= 1:
+#         # Create a dense grid
+#         xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.05),
+#                              np.arange(y_min, y_max, 0.05))
+        
+#         # Find nearest centroid from the REGION codebook
+#         grid_points = np.c_[xx.ravel(), yy.ravel()]
+#         dist_sq = np.sum((grid_points[:, np.newaxis, :] - region_cb[np.newaxis, :, :]) ** 2, axis=2)
+#         Z = np.argmin(dist_sq, axis=1)
+#         Z = Z.reshape(xx.shape)
+        
+#         ax.imshow(Z, interpolation='nearest',
+#                   extent=(xx.min(), xx.max(), yy.min(), yy.max()),
+#                   cmap=plt.get_cmap(cmap_choice),
+#                   aspect='auto', origin='lower', alpha=0.5)
+
+#     # --- 2. Data Points ---
+#     # ax.scatter(X[:, 0], X[:, 1], s=15, c='k', alpha=0.3, label="Data")
+#     ax.scatter(X[:, 0], X[:, 1], c='k', s=2, zorder=5, label="Data")
+    
+#     # --- 3. Trajectories ---
+#     if show_traj and len(st.session_state['centroids_history']) > 1:
+#         hist_arr = np.array(st.session_state['centroids_history'])
+#         # Only plot trajectories if dimensions match (safety check)
+#         if hist_arr.shape[1] == len(cb):
+#             for c_idx in range(len(cb)):
+#                 path = hist_arr[:, c_idx, :]
+#                 ax.plot(path[:, 0], path[:, 1], 'k--', linewidth=1, alpha=0.4)
+#                 ax.scatter(path[0, 0], path[0, 1], c='gray', s=20, alpha=0.4)
+
+#     # --- 4. Current Centroids (The REAL ones) ---
+#     # We always plot the actual 'codebook' here, so you see the split happen 
+#     # even if the background color hasn't updated yet.
+#     ax.scatter(cb[:, 0], cb[:, 1], c='#ff0000', s=150, marker='X', linewidth=2.0, label="Centroids", zorder=10, edgecolors='white')
+    
+#     ax.set_xlim(x_min, x_max)
+#     ax.set_ylim(y_min, y_max)
+#     ax.set_title(f"State: {st.session_state['stage']} (N={len(cb)})", fontsize=14, pad=10)
+#     ax.legend(loc="upper right", frameon=True, framealpha=0.9)
+#     ax.set_xticks([])
+#     ax.set_yticks([])
+    
+#     # Clean Grid
+#     ax.grid(False)
+#     for spine in ax.spines.values():
+#         spine.set_visible(True)
+#         spine.set_color('#dddddd')
+    
+#     fig.patch.set_alpha(0) 
+#     ax.patch.set_alpha(0)
+#     st.pyplot(fig)
+
+
 with col_main:
     fig, ax = plt.subplots(figsize=(10, 7))
     
@@ -211,10 +275,10 @@ with col_main:
     y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
     
     # --- 1. Background Coloring (Decision Boundaries) ---
-    # We use 'region_codebook' which lags behind the actual 'codebook' during the split phase
     region_cb = st.session_state['region_codebook']
+    N_regions = len(region_cb)
     
-    if len(region_cb) >= 1:
+    if N_regions >= 1:
         # Create a dense grid
         xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.05),
                              np.arange(y_min, y_max, 0.05))
@@ -225,28 +289,57 @@ with col_main:
         Z = np.argmin(dist_sq, axis=1)
         Z = Z.reshape(xx.shape)
         
+        # --- COLOR FIX START ---
+        from matplotlib.colors import ListedColormap
+        import matplotlib.cm as cm
+        
+        # 1. Get the base colormap object
+        try:
+            base_cmap = cm.get_cmap(cmap_choice)
+        except:
+            base_cmap = cm.get_cmap('tab20') # Fallback
+            
+        # 2. Extract standard colors from the map
+        if hasattr(base_cmap, 'colors'):
+            # For discrete maps like 'Set3', 'Pastel1'
+            base_colors = base_cmap.colors 
+        else:
+            # For continuous maps like 'viridis' or 'nipy_spectral'
+            base_colors = base_cmap(np.linspace(0, 1, 256))
+            
+        # 3. Create a new list that cycles through base colors enough times to cover N_regions
+        # This ensures we never run out of colors, even if N=128
+        extended_colors = [base_colors[i % len(base_colors)] for i in range(N_regions)]
+        
+        # 4. Shuffle them deterministically so adjacent regions (often close in index) 
+        # don't get similar colors if the cycle is short.
+        # (Optional, but helps contrast)
+        np.random.seed(42) 
+        np.random.shuffle(extended_colors)
+        
+        custom_cmap = ListedColormap(extended_colors)
+        
+        # 5. Plot with explicit vmin/vmax to map indices 0..N-1 exactly to our N colors
         ax.imshow(Z, interpolation='nearest',
                   extent=(xx.min(), xx.max(), yy.min(), yy.max()),
-                  cmap=plt.get_cmap(cmap_choice),
+                  cmap=custom_cmap,
+                  vmin=0, vmax=N_regions-1,
                   aspect='auto', origin='lower', alpha=0.5)
+        # --- COLOR FIX END ---
 
     # --- 2. Data Points ---
-    # ax.scatter(X[:, 0], X[:, 1], s=15, c='k', alpha=0.3, label="Data")
-    ax.scatter(X[:, 0], X[:, 1], c='k', s=2, zorder=5, label="Data")
+    ax.scatter(X[:, 0], X[:, 1], s=15, c='k', alpha=0.3, label="Data")
     
     # --- 3. Trajectories ---
     if show_traj and len(st.session_state['centroids_history']) > 1:
         hist_arr = np.array(st.session_state['centroids_history'])
-        # Only plot trajectories if dimensions match (safety check)
         if hist_arr.shape[1] == len(cb):
             for c_idx in range(len(cb)):
                 path = hist_arr[:, c_idx, :]
                 ax.plot(path[:, 0], path[:, 1], 'k--', linewidth=1, alpha=0.4)
                 ax.scatter(path[0, 0], path[0, 1], c='gray', s=20, alpha=0.4)
 
-    # --- 4. Current Centroids (The REAL ones) ---
-    # We always plot the actual 'codebook' here, so you see the split happen 
-    # even if the background color hasn't updated yet.
+    # --- 4. Current Centroids ---
     ax.scatter(cb[:, 0], cb[:, 1], c='#ff0000', s=150, marker='X', linewidth=2.0, label="Centroids", zorder=10, edgecolors='white')
     
     ax.set_xlim(x_min, x_max)
@@ -256,7 +349,6 @@ with col_main:
     ax.set_xticks([])
     ax.set_yticks([])
     
-    # Clean Grid
     ax.grid(False)
     for spine in ax.spines.values():
         spine.set_visible(True)
@@ -264,4 +356,5 @@ with col_main:
     
     fig.patch.set_alpha(0) 
     ax.patch.set_alpha(0)
+    
     st.pyplot(fig)
