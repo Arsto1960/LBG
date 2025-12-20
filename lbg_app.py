@@ -204,8 +204,8 @@ with col_main:
             # Color the regions
             for i, region in enumerate(vor.regions):
                 if not -1 in region and len(region) > 0:
-                polygon = [vor.vertices[j] for j in region]
-                ax.fill(*zip(*polygon), color=colors[i % len(colors)], alpha=0.7)
+                    polygon = [vor.vertices[j] for j in region]
+                    ax.fill(*zip(*polygon), color=colors[i % len(colors)], alpha=0.7)
         except:
             pass 
             
