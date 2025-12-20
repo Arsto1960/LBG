@@ -181,7 +181,8 @@ with col_main:
                   aspect='auto', origin='lower', alpha=0.5)
 
     # 2. Data Points
-    ax.scatter(X[:, 0], X[:, 1], s=15, c='k', alpha=0.3, label="Data")
+    # ax.scatter(X[:, 0], X[:, 1], s=15, c='k', alpha=0.3, label="Data")
+    ax.scatter(X[:, 0], X[:, 1], c='k', s=2, zorder=5, label="Data")
     
     # 3. Trajectories
     if show_traj and len(st.session_state['centroids_history']) > 1:
