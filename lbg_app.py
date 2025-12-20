@@ -172,12 +172,6 @@ with col_controls:
             del st.session_state['codebook']
             st.session_state['history'] = []
             st.rerun()
-            
-    # Distortion Plot (Small)
-    st.write("### Distortion Curve")
-    st.line_chart(st.session_state['history'], height=150)
-    st.caption("Lower is better. Jumps indicate Splits.")
-
 
 # --- Visualization ---
 with col_plot:
@@ -197,6 +191,11 @@ with col_plot:
             
     # 3. Plot Centroids
     ax.scatter(cb[:, 0], cb[:, 1], c='red', s=120, marker='X', edgecolor='black', linewidth=1, label="Codevectors")
+
+    # Distortion Plot (Small)
+    st.write("### Distortion Curve")
+    st.line_chart(st.session_state['history'], height=150)
+    st.caption("Lower is better. Jumps indicate Splits.")
     
     # Visual Polish
     ax.set_title(f"Visualizing LBG State: {st.session_state.get('stage', 'Init')}", fontsize=14)
