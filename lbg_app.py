@@ -12,7 +12,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- CSS for Professional Look ---
+# --- CSS  ---
 st.markdown("""
 <style>
     .stButton>button { width: 100%; border-radius: 5px; }
@@ -173,7 +173,7 @@ with col_main:
     fig, ax = plt.subplots(figsize=(10, 7))
     
     # 1. Data Density (Blue, Small, Transparent)
-    ax.scatter(X[:, 0], X[:, 1], s=10, c='#4a90e2', alpha=0.3, label="Data Density", edgecolors='none')
+    ax.scatter(X[:, 0], X[:, 1], s=15, c='#4a90e2', alpha=0.4, label="Data")
     
     # 2. Trajectories (The path centroids took)
     if show_traj and len(st.session_state['centroids_history']) > 1:
@@ -188,14 +188,15 @@ with col_main:
                 ax.plot(path[:, 0], path[:, 1], 'k--', linewidth=1, alpha=0.5)
                 ax.scatter(path[0, 0], path[0, 1], c='gray', s=20, alpha=0.5)
 
+
     # 3. Voronoi Regions
     if len(cb) >= 2:
         try:
             vor = Voronoi(cb)
             voronoi_plot_2d(vor, ax=ax, 
-                            show_vertices=False, 
-                            line_colors='#333333',
-                            line_width=1.5, 
+                            show_vertices=True, 
+                            line_colors='orange',
+                            line_width=2, 
                             line_alpha=0.6, 
                             point_size=0)
         except:
