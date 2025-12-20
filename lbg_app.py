@@ -27,15 +27,9 @@ st.markdown("""
 st.title("💠 The LBG Algorithm")
 st.markdown("""
 ### 🚀 How to use this App
-This interactive tool demonstrates how the **LBG Algorithm** creates a codebook to represent a large dataset with just a few "representative" vectors.
-
-1. **Observe the Data:** The gray dots represent your input data (e.g., audio samples or image pixels).
-2. **Start Small:** The app begins with **N=1** (one red 'X' at the global mean).
-3. **The LBG Cycle:**
-    * Click **✂️ SPLIT** to double your codevectors. You will see each 'X' divide into two.
-    * Click **⚙️ OPTIMIZE** (multiple times) to watch the red vectors move toward the center of their local data clusters (Lloyd's Iteration).
-4. **Watch the Distortion:** As the **Codebook Size** increases, the **Distortion (MSE)** will drop, meaning the quantization is becoming more accurate.
-5. **Voronoi Regions:** The orange lines show the decision boundaries; any data point inside a region is "quantized" to the red 'X' within it.
+1. **Split & Optimize:** Use the **Split** button to double the red codevectors, then click **Optimize** to move them to the center of their data clusters.
+2. **Watch the Map:** Observe how the **Voronoi regions** (orange lines) carve the space and how **Distortion (MSE)** drops as the codebook grows.
+3. **Refine:** Continue the split/optimize cycle until you reach your target codebook size.
 """)
 
 # --- Sidebar Controls ---
