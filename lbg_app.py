@@ -172,8 +172,9 @@ if len(st.session_state['history']) > 0:
 with col_main:
     fig, ax = plt.subplots(figsize=(10, 7))
     
-    # 1. Data Density (Blue, Small, Transparent)
-    ax.scatter(X[:, 0], X[:, 1], s=15, c='#4a90e2', alpha=0.4, label="Data")
+    # 1. Data Density
+    ax.scatter(X[:, 0], X[:, 1], s=15, c='gray', alpha=0.4, label="Data")
+    # ax.scatter(X[:, 0], points[:, 1], c='k', s=2, zorder=5)
     
     # 2. Trajectories (The path centroids took)
     if show_traj and len(st.session_state['centroids_history']) > 1:
@@ -194,33 +195,47 @@ with col_main:
         try:
             vor = Voronoi(cb)
             voronoi_plot_2d(vor, ax=ax, 
-                            show_vertices=True, 
-                            line_colors='orange',
-                            line_width=2, 
+                            show_vertices=False, 
+                            line_colors='black',
+                            line_width=0.5, 
                             line_alpha=0.6, 
                             point_size=0)
+
+            # Color the regions
+            for i, region in enumerate(vor.regions):
+                if not -1 in region and len(region) > 0:
+                polygon = [vor.vertices[j] for j in region]
+                ax.fill(*zip(*polygon), color=colors[i % len(colors)], alpha=0.7)
         except:
             pass 
             
     # 4. Current Centroids
     ax.scatter(cb[:, 0], cb[:, 1], c='#ff0000', s=150, marker='+', linewidth=2.5, label="Centroids", zorder=10)
+    # ax.scatter(cb[:, 0], centroids[:, 1], c='m', marker='x', s=100, linewidth=3, zorder=10)
     
     # Style
-    ax.set_title(f"State: {st.session_state['stage']} (N={len(cb)})", fontsize=14, pad=10)
-    ax.legend(loc="upper right", frameon=True, framealpha=0.9)
-    ax.set_xticks([])
-    ax.set_yticks([])
+    # ax.set_title(f"State: {st.session_state['stage']} (N={len(cb)})", fontsize=14, pad=10)
+    # ax.legend(loc="upper right", frameon=True, framealpha=0.9)
+    # ax.set_xticks([])
+    # ax.set_yticks([])
     
-    # Clean Grid
-    ax.grid(False)
-    for spine in ax.spines.values():
-        spine.set_visible(True)
-        spine.set_color('#dddddd')
+    # # Clean Grid
+    # ax.grid(False)
+    # for spine in ax.spines.values():
+    #     spine.set_visible(True)
+    #     spine.set_color('#dddddd')
     
-    fig.patch.set_alpha(0) 
-    ax.patch.set_alpha(0)
+    # fig.patch.set_alpha(0) 
+    # ax.patch.set_alpha(0)
     
-    st.pyplot(fig)
+    # st.pyplot(fig)
+    
+    ax.set_title('K-means clustering on 2-Dimension Vector Space\nCentroids are marked with magenta crosses')
+    ax.set_xlim(-1, 1.1)
+    ax.set_ylim(-1, 1.3)
+
+    plt.show()
+
 
 
 
