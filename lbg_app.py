@@ -175,8 +175,8 @@ with col_main:
     fig, ax = plt.subplots(figsize=(10, 7))
     
     # 1. Data Density
-    ax.scatter(X[:, 0], X[:, 1], s=15, c='gray', alpha=0.4, label="Data")
-    # ax.scatter(X[:, 0], points[:, 1], c='k', s=2, zorder=5)
+    # ax.scatter(X[:, 0], X[:, 1], s=15, c='gray', alpha=0.4, label="Data")
+    ax.scatter(X[:, 0], X[:, 1], c='k', s=2, zorder=5, label="Data")
     
     # 2. Trajectories (The path centroids took)
     if show_traj and len(st.session_state['centroids_history']) > 1:
