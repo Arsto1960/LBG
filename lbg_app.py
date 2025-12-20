@@ -29,7 +29,8 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.title("💠 LBG Vector Quantization")
+# st.title("💠 LBG Vector Quantization")
+st.markdown("### 💠 LBG Vector Quantization")
 
 # --- Sidebar Controls ---
 with st.sidebar:
@@ -129,7 +130,7 @@ with col_side:
             st.session_state['stage'] = "Split"
             st.rerun()
             
-        if st.button("▶️ OPTIMIZE (Run Loop)"):
+        if st.button("▶️ OPTIMIZE"):
             st.session_state['centroids_history'] = [st.session_state['codebook']]
             
             progress = st.progress(0)
@@ -162,10 +163,10 @@ with col_side:
             st.session_state['stage'] = "Init"
             st.rerun()
 
-    # Mini Distortion Plot
-    if len(st.session_state['history']) > 0:
-        st.markdown("**Distortion Curve**")
-        st.line_chart(st.session_state['history'], height=150)
+# Mini Distortion Plot
+if len(st.session_state['history']) > 0:
+    st.markdown("**Distortion Curve**")
+    st.line_chart(st.session_state['history'], height=150)
 
 # --- Visualization ---
 with col_main:
