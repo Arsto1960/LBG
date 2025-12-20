@@ -28,8 +28,9 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.title("💠 The LBG Algorithm")
-
+# --- Header ---
+# st.title("💠 The LBG Algorithm")
+st.markdown("### 💠 The LBG Algorithm")
 # --- Theory Expander ---
 with st.expander("📝 How does LBG work? (Click to read)"):
     st.markdown("""
@@ -135,7 +136,7 @@ with col_controls:
     
     # 1. SPLIT LOGIC
     if current_N < target_size:
-        if st.button("✂️ SPLIT (Double N)", type="primary"):
+        if st.button("✂️ Double N", type="primary"):
             st.session_state['codebook'] = split_codebook(st.session_state['codebook'], epsilon)
             st.session_state['stage'] = "Split (Need Optimization)"
             st.rerun()
@@ -192,10 +193,10 @@ with col_plot:
     # 3. Plot Centroids
     ax.scatter(cb[:, 0], cb[:, 1], c='red', s=120, marker='X', edgecolor='black', linewidth=1, label="Codevectors")
 
-    # Distortion Plot (Small)
-    st.write("### Distortion Curve")
+    # 4. Distortion Plot (Small)
+    st.write("### Distortion")
     st.line_chart(st.session_state['history'], height=150)
-    st.caption("Lower is better. Jumps indicate Splits.")
+    # st.caption("Lower is better. Jumps indicate Splits.")
     
     # Visual Polish
     ax.set_title(f"Visualizing LBG State: {st.session_state.get('stage', 'Init')}", fontsize=14)
