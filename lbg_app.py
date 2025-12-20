@@ -24,10 +24,18 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.title("💠 Vector Quantization: The LBG Algorithm")
+st.title("💠 The LBG Algorithm")
 st.markdown("""
-**Linde-Buzo-Gray (LBG)** is a clustering algorithm used to derive a **Codebook** for compressing data. 
-It starts with 1 vector and recursively **splits** and **optimizes** (using K-Means) until the desired codebook size is reached.
+### 🚀 How to use this App
+This interactive tool demonstrates how the **LBG Algorithm** creates a codebook to represent a large dataset with just a few "representative" vectors.
+
+1. **Observe the Data:** The gray dots represent your input data (e.g., audio samples or image pixels).
+2. **Start Small:** The app begins with **N=1** (one red 'X' at the global mean).
+3. **The LBG Cycle:**
+    * Click **✂️ SPLIT** to double your codevectors. You will see each 'X' divide into two.
+    * Click **⚙️ OPTIMIZE** (multiple times) to watch the red vectors move toward the center of their local data clusters (Lloyd's Iteration).
+4. **Watch the Distortion:** As the **Codebook Size** increases, the **Distortion (MSE)** will drop, meaning the quantization is becoming more accurate.
+5. **Voronoi Regions:** The orange lines show the decision boundaries; any data point inside a region is "quantized" to the red 'X' within it.
 """)
 
 # --- Sidebar Controls ---
@@ -103,7 +111,7 @@ if 'codebook' not in st.session_state:
 col_plot, col_info = st.columns([2, 1])
 
 with col_info:
-    st.subheader("Algorithm Control")
+    # st.subheader("Algorithm Control")
     
     current_N = len(st.session_state['codebook'])
     distortion = get_distortion(X, st.session_state['codebook'])
@@ -140,7 +148,15 @@ with col_info:
         st.session_state['stage'] = "Reset"
         st.rerun()
 
-    with st.expander("📝 What is happening?"):
+    # with st.expander("📝 What is happening?"):
+    #     st.write("""
+    #     1. **Split:** Each red X (codevector) splits into two nearby vectors.
+    #     2. **Optimize:** The vectors move to the center of the data points closest to them (Lloyd's Rule).
+    #     3. **Repeat:** Until we have the desired number of quantization levels.
+    #     """)
+
+
+with st.expander("📝 What is happening?"):
         st.write("""
         1. **Split:** Each red X (codevector) splits into two nearby vectors.
         2. **Optimize:** The vectors move to the center of the data points closest to them (Lloyd's Rule).
