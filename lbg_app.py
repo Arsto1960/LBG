@@ -103,6 +103,14 @@ if 'codebook' not in st.session_state:
     st.session_state['codebook'] = np.array([X.mean(axis=0)])
     st.session_state['stage'] = "Optimized (N=1)"
 
+if 'history' not in st.session_state:
+    st.session_state['history'] = []
+
+# Update this every time the codebook changes
+current_dist = get_distortion(X, st.session_state['codebook'])
+if not st.session_state['history'] or st.session_state['history'][-1] != current_dist:
+    st.session_state['history'].append(current_dist)
+
 # --- Main Layout ---
 col_plot, col_info = st.columns([2, 1])
 
@@ -190,3 +198,9 @@ with col_plot:
     ax.patch.set_alpha(0)
     
     st.pyplot(fig)
+
+    # Add this to the bottom of your app to show the "Learning Curve"
+    st.divider()
+    st.subheader("📉 Distortion Trend")
+    st.line_chart(st.session_state['history'])
+    st.caption("This chart shows how the error (MSE) decreases as you split and optimize.")
