@@ -215,28 +215,28 @@ with col_main:
     ax.scatter(cb[:, 0], cb[:, 1], c='#ff0000', s=150, marker='+', linewidth=2.5, label="Centroids", zorder=10)
     # ax.scatter(cb[:, 0], centroids[:, 1], c='m', marker='x', s=100, linewidth=3, zorder=10)
     
-    # # Style
-    # ax.set_title(f"State: {st.session_state['stage']} (N={len(cb)})", fontsize=14, pad=10)
-    # ax.legend(loc="upper right", frameon=True, framealpha=0.9)
-    # ax.set_xticks([])
-    # ax.set_yticks([])
+    # Style
+    ax.set_title(f"State: {st.session_state['stage']} (N={len(cb)})", fontsize=14, pad=10)
+    ax.legend(loc="upper right", frameon=True, framealpha=0.9)
+    ax.set_xticks([])
+    ax.set_yticks([])
     
-    # # Clean Grid
-    # ax.grid(False)
-    # for spine in ax.spines.values():
-    #     spine.set_visible(True)
-    #     spine.set_color('#dddddd')
+    # Clean Grid
+    ax.grid(False)
+    for spine in ax.spines.values():
+        spine.set_visible(True)
+        spine.set_color('#dddddd')
     
-    # fig.patch.set_alpha(0) 
-    # ax.patch.set_alpha(0)
+    fig.patch.set_alpha(0) 
+    ax.patch.set_alpha(0)
     
-    # st.pyplot(fig)
+    st.pyplot(fig)
     
-    ax.set_title('K-means clustering on 2-Dimension Vector Space\nCentroids are marked with magenta crosses')
-    ax.set_xlim(-1, 1.1)
-    ax.set_ylim(-1, 1.3)
+    # ax.set_title('K-means clustering on 2-Dimension Vector Space\nCentroids are marked with magenta crosses')
+    # ax.set_xlim(-1, 1.1)
+    # ax.set_ylim(-1, 1.3)
 
-    plt.show()
+    # plt.show()
 
 
 
