@@ -25,12 +25,14 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.title("💠 The LBG Algorithm")
-st.markdown("""
-### 🚀 How to use this App
-1. **Split & Optimize:** Use the **Split** button to double the red codevectors, then click **Optimize** to move them to the center of their data clusters.
-2. **Watch the Map:** Observe how the **Voronoi regions** (orange lines) carve the space and how **Distortion (MSE)** drops as the codebook grows.
-3. **Refine:** Continue the split/optimize cycle until you reach your target codebook size.
-""")
+with st.expander("📝 How to use this App?"):
+    st.markdown("""
+    ### 🚀 How to use this App
+    1. **Split & Optimize:** Use the **Split** button to double the red codevectors, then click **Optimize** to move them to the center of their data clusters.
+    2. **Watch the Map:** Observe how the **Voronoi regions** (orange lines) carve the space and how **Distortion (MSE)** drops as the codebook grows.
+    3. **Refine:** Continue the split/optimize cycle until you reach your target codebook size.
+    """)
+
 
 # --- Sidebar Controls ---
 with st.sidebar:
