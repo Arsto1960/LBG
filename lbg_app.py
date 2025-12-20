@@ -43,7 +43,7 @@ with st.sidebar:
         st.session_state['data'] = X
         st.session_state['codebook'] = np.array([X.mean(axis=0)]) # Reset to N=1
         st.session_state['history'] = []
-        st.session_state['centroids_history'] = [] # For trajectory plotting
+        st.session_state['centroids_history'] = [] 
         st.session_state['stage'] = "Init"
 
     st.divider()
@@ -52,13 +52,22 @@ with st.sidebar:
     epsilon = st.number_input("Splitting Noise (ε)", 0.001, 0.1, 0.02)
     show_traj = st.checkbox("Show Trajectories", value=True, help="Draw lines showing where centroids moved")
 
-# --- Init State ---
+# --- Safe Initialization (The Fix) ---
+# We check each key individually to handle hot-reloading gracefully
 if 'data' not in st.session_state:
     X, y = make_blobs(n_samples=n_samples, centers=n_blobs, cluster_std=cluster_std, random_state=42)
     st.session_state['data'] = X
-    st.session_state['codebook'] = np.array([X.mean(axis=0)])
+
+if 'codebook' not in st.session_state:
+    st.session_state['codebook'] = np.array([st.session_state['data'].mean(axis=0)])
+
+if 'history' not in st.session_state:
     st.session_state['history'] = []
+
+if 'centroids_history' not in st.session_state:
     st.session_state['centroids_history'] = []
+
+if 'stage' not in st.session_state:
     st.session_state['stage'] = "Init"
 
 X = st.session_state['data']
@@ -79,7 +88,7 @@ def step_kmeans(X, cb):
         if len(pts) > 0:
             new_cb.append(pts.mean(axis=0))
         else:
-            # Re-initialize empty cell to a random data point to fix "dead unit" problem
+            # Re-initialize empty cell to a random data point
             new_cb.append(X[np.random.choice(len(X))])
     return np.array(new_cb)
 
@@ -150,6 +159,7 @@ with col_side:
             st.session_state['codebook'] = np.array([X.mean(axis=0)])
             st.session_state['history'] = []
             st.session_state['centroids_history'] = []
+            st.session_state['stage'] = "Init"
             st.rerun()
 
     # Mini Distortion Plot
@@ -157,12 +167,11 @@ with col_side:
         st.markdown("**Distortion Curve**")
         st.line_chart(st.session_state['history'], height=150)
 
-# --- The "Montes-Style" Visualization ---
+# --- Visualization ---
 with col_main:
     fig, ax = plt.subplots(figsize=(10, 7))
     
     # 1. Data Density (Blue, Small, Transparent)
-    # This creates the "Cloud" look from the paper
     ax.scatter(X[:, 0], X[:, 1], s=10, c='#4a90e2', alpha=0.3, label="Data Density", edgecolors='none')
     
     # 2. Trajectories (The path centroids took)
@@ -172,25 +181,26 @@ with col_main:
         # We iterate over centroids to draw lines
         for c_idx in range(len(cb)):
             # Get path for centroid 'c_idx' across all time steps
-            path = hist_arr[:, c_idx, :]
-            ax.plot(path[:, 0], path[:, 1], 'k--', linewidth=1, alpha=0.5)
-            # Add small start dot
-            ax.scatter(path[0, 0], path[0, 1], c='gray', s=20, alpha=0.5)
+            # Check bounds to avoid crashing if splitting changed dimensions mid-history
+            if c_idx < hist_arr.shape[1]: 
+                path = hist_arr[:, c_idx, :]
+                ax.plot(path[:, 0], path[:, 1], 'k--', linewidth=1, alpha=0.5)
+                ax.scatter(path[0, 0], path[0, 1], c='gray', s=20, alpha=0.5)
 
-    # 3. Voronoi Regions (Orange/Black lines)
+    # 3. Voronoi Regions
     if len(cb) >= 2:
         try:
             vor = Voronoi(cb)
             voronoi_plot_2d(vor, ax=ax, 
                             show_vertices=False, 
-                            line_colors='#333333', # Dark Grey for professional look
+                            line_colors='#333333',
                             line_width=1.5, 
                             line_alpha=0.6, 
                             point_size=0)
         except:
-            pass # Fails if points are collinear
+            pass 
             
-    # 4. Current Centroids (Bright Red)
+    # 4. Current Centroids
     ax.scatter(cb[:, 0], cb[:, 1], c='#ff0000', s=150, marker='+', linewidth=2.5, label="Centroids", zorder=10)
     
     # Style
@@ -201,12 +211,11 @@ with col_main:
     
     # Clean Grid
     ax.grid(False)
-    # Remove border spines for that "Modern Web" look
     for spine in ax.spines.values():
         spine.set_visible(True)
         spine.set_color('#dddddd')
     
-    fig.patch.set_alpha(0) # Transparent bg
+    fig.patch.set_alpha(0) 
     ax.patch.set_alpha(0)
     
     st.pyplot(fig)
