@@ -168,6 +168,8 @@ if len(st.session_state['history']) > 0:
     st.markdown("**Distortion Curve**")
     st.line_chart(st.session_state['history'], height=150)
 
+colors = ['#d7191c', '#33a02c', '#ffff99', '#cab2d6', '#fdbf6f',
+          '#a65628', '#1f78b4', '#a6cee3', '#1f78b4']
 # --- Visualization ---
 with col_main:
     fig, ax = plt.subplots(figsize=(10, 7))
