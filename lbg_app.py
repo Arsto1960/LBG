@@ -126,7 +126,7 @@ with col_controls:
     st.markdown(f"""
     <div class="metric-box">
         # <h3>N = {current_N}</h3>
-        <b>current_N</b>
+        <b>N =</b><{current_N}>
         <small>Target: {target_size}</small><br><br>
         <b>Distortion (MSE):</b><br>
         <span style="font-size: 1.2em; color: #ff4b4b;">{distortion:.4f}</span>
