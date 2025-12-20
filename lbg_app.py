@@ -23,6 +23,8 @@ st.markdown("""
         border-radius: 10px;
         text-align: center;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        footer {visibility: hidden;}
+        header {visibility: hidden;}
     }
     .big-stat { font-size: 24px; font-weight: bold; color: #007bff; }
     .stat-label { font-size: 14px; color: #6c757d; text-transform: uppercase; letter-spacing: 1px; }
