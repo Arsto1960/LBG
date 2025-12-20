@@ -33,10 +33,9 @@ st.markdown("### 💠 LBG Vector Quantization")
 # --- Theory Expander ---
 with st.expander("📝 How to use this App?"):
     st.markdown("""
-    ### 🚀 How to use this App
-    1. **Split & Optimize:** Use the **Split** button to double the red codevectors, then click **Optimize** to move them to the center of their data clusters.
-    2. **Watch the Map:** Observe how the **Voronoi regions** (orange lines) carve the space and how **Distortion (MSE)** drops as the codebook grows.
-    3. **Refine:** Continue the split/optimize cycle until you reach your target codebook size.
+    1. **Split & Optimize:** Use the **Double N** button to double the red codevectors, then click **Optimize** to move them to the center of their data clusters.
+    2. Observe how the **Voronoi regions** carve the space and how **Distortion (MSE)** drops as the codebook grows.
+    3. Continue the split/optimize cycle until you reach your target codebook size.
     """)
 
 # --- Sidebar Controls ---
@@ -138,7 +137,20 @@ with col_side:
     st.write("") 
 
     if len(cb) < target_size:
-        if st.button("✂️ Double N", type="primary"):
+        # if st.button("✂️ Double N", type="primary"):
+        #     st.session_state['centroids_history'] = [st.session_state['codebook']] 
+            
+        #     # 1. Split the ACTUAL codebook
+        #     st.session_state['codebook'] = split(st.session_state['codebook'], epsilon)
+            
+        #     # NOTE: We do NOT update 'region_codebook' here. 
+        #     # This keeps the background regions frozen (showing the old N state)
+        #     # while the red Xs (scatter plot) will show the new split state.
+            
+        #     st.session_state['stage'] = "Split"
+        #     st.rerun()
+            
+        if st.button("▶️ OPTIMIZE"):
             st.session_state['centroids_history'] = [st.session_state['codebook']] 
             
             # 1. Split the ACTUAL codebook
@@ -149,9 +161,10 @@ with col_side:
             # while the red Xs (scatter plot) will show the new split state.
             
             st.session_state['stage'] = "Split"
-            st.rerun()
+            # st.rerun()
+
+
             
-        if st.button("▶️ OPTIMIZE"):
             st.session_state['centroids_history'] = [st.session_state['codebook']]
             progress = st.progress(0)
             
