@@ -170,7 +170,7 @@ with col_main:
             y=np.arange(y_min, y_max, resolution),
             z=regions,
             showscale=False,
-            colorscale='Pastel', # Modern pastel look
+            colorscale='Spectral',  # <--- FIXED: 'Pastel' was invalid. 'Spectral' works great for regions.
             opacity=0.4,
             hoverinfo='skip'
         ))
