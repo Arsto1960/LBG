@@ -584,7 +584,7 @@ with col_main:
         spine.set_visible(True)
         spine.set_color('#dddddd')
     
-#     fig.patch.set_alpha(0) 
-#     ax.patch.set_alpha(0)
+    fig.patch.set_alpha(0) 
+    ax.patch.set_alpha(0)
     
-#     st.pyplot(fig)
+    st.pyplot(fig)
