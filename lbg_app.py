@@ -110,7 +110,7 @@ if 'data' not in st.session_state:
 # ==============================================================================
 with st.sidebar:
     st.title("💠 LBG OPS")
-    st.markdown("Vector Quantization Console")
+    # st.markdown("Vector Quantization Console")
     st.divider()
 
     st.markdown("### 1. Data Generation")
@@ -187,7 +187,7 @@ col_main, col_ctrl = st.columns([3, 1])
 
 # --- Algorithm Actions (Right Column) ---
 with col_ctrl:
-    st.markdown("### MISSION CONTROLS")
+    # st.markdown("### MISSION CONTROLS")
     
     if len(cb) < target_size:
         # The Main "Action" Button
