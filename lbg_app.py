@@ -264,7 +264,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.header("💠 LBG Vector Quantization")
+st.subheader("💠 LBG Vector Quantization")
 # st.markdown("### 💠 LBG Vector Quantization")
 # --- Theory Expander ---
 with st.expander("📝 How to use this App?"):
