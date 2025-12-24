@@ -242,6 +242,12 @@ st.set_page_config(
 # --- CSS ---
 st.markdown("""
 <style>
+    .block-container {
+            padding-top: 1rem;
+            padding-bottom: 0rem;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
     .stButton>button { width: 100%; border-radius: 5px; }
     .metric-container {
         background-color: #f8f9fa;
@@ -294,7 +300,7 @@ with st.sidebar:
     st.divider()
     # NEW: Color Map Selector
     cmap_choice = st.selectbox("Region Color Map", 
-                               ['Pastel1', 'Set3', 'Paired', 'tab20', 'tab20c', 'Accent'])
+                               ['Accent', 'Pastel1', 'Set3', 'Paired', 'tab20', 'tab20c'])
 
 # --- Initialization ---
 if 'data' not in st.session_state:
