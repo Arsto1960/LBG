@@ -173,7 +173,7 @@ def split_cb(cb, eps):
 # ==============================================================================
 # 🖥️ MAIN DASHBOARD
 # ==============================================================================
-st.header("LBG QUANTIZATION VISUALIZER")
+st.header("💠 LBG QUANTIZATION")
 
 # 1. Metrics Row
 mse = get_distortion(X, cb)
